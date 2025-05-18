@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import EmojiPicker, { EmojiClickData, Theme } from "emoji-picker-react";
+import EmojiPicker, { Theme } from "emoji-picker-react";
 import {
   MainContainer,
   ChatContainer,
@@ -323,7 +323,7 @@ function App() {
     }
   };
 
-  const getStatusColor = (status: "sent" | "delivered" | "read") => {
+  /* const getStatusColor = (status: "sent" | "delivered" | "read") => {
     switch (status) {
       case "sent":
         return "#666666";
@@ -334,7 +334,7 @@ function App() {
       default:
         return "#666666";
     }
-  };
+  }; */
 
   const handleReaction = (messageId: string, emoji: string) => {
     setMessages((prev) =>
