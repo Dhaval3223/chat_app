@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import EmojiPicker, { Theme } from "emoji-picker-react";
 import {
   MainContainer,
   ChatContainer,
   MessageList,
-  Message,
   MessageInput,
-  TypingIndicator,
   ConversationHeader,
   Sidebar,
   Search,
@@ -16,13 +13,16 @@ import {
   MessageSeparator,
 } from "@chatscope/chat-ui-kit-react";
 import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
-import { Modal, Button, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { ChatMessage as ChatMessageType, Attachment, Chat } from './components/types';
-import { ChatMessage } from './components/ChatMessage';
-import { AttachmentModal } from './components/AttachmentModal';
-import { AttachmentPreview } from './components/AttachmentPreview';
-import { ReplyModal } from './components/ReplyModal';
+import {
+  ChatMessage as ChatMessageType,
+  Attachment,
+  Chat,
+} from "./components/types";
+import { ChatMessage } from "./components/ChatMessage";
+import { AttachmentModal } from "./components/AttachmentModal";
+import { ReplyModal } from "./components/ReplyModal";
+import { EditModal } from "./components/EditModal";
 
 function App() {
   const [messages, setMessages] = useState<ChatMessageType[]>([
@@ -51,31 +51,36 @@ function App() {
       }),
       date: new Date().toLocaleDateString(),
       status: "read",
-      attachments: [{
-        id: "att1",
-        name: "project-screenshot.png",
-        type: "image",
-        url: "https://picsum.photos/400/300",
-        size: 1024 * 1024 // 1MB
-      },{
-        id: "att1",
-        name: "project-screenshot.png",
-        type: "image",
-        url: "https://picsum.photos/400/300",
-        size: 1024 * 1024 // 1MB
-      },{
-        id: "att1",
-        name: "project-screenshot.png",
-        type: "image",
-        url: "https://picsum.photos/400/300",
-        size: 1024 * 1024 // 1MB
-      },{
-        id: "att1",
-        name: "project-screenshot.png",
-        type: "image",
-        url: "https://picsum.photos/400/300",
-        size: 1024 * 1024 // 1MB
-      }]
+      attachments: [
+        {
+          id: "att1",
+          name: "project-screenshot.png",
+          type: "image",
+          url: "https://picsum.photos/400/300",
+          size: 1024 * 1024, // 1MB
+        },
+        {
+          id: "att1",
+          name: "project-screenshot.png",
+          type: "image",
+          url: "https://picsum.photos/400/300",
+          size: 1024 * 1024, // 1MB
+        },
+        {
+          id: "att1",
+          name: "project-screenshot.png",
+          type: "image",
+          url: "https://picsum.photos/400/300",
+          size: 1024 * 1024, // 1MB
+        },
+        {
+          id: "att1",
+          name: "project-screenshot.png",
+          type: "image",
+          url: "https://picsum.photos/400/300",
+          size: 1024 * 1024, // 1MB
+        },
+      ],
     },
     {
       id: "3",
@@ -89,31 +94,36 @@ function App() {
       }),
       date: new Date().toLocaleDateString(),
       status: "read",
-      attachments: [{
-        id: "att2",
-        name: "project-requirements.pdf",
-        type: "document",
-        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-        size: 2.5 * 1024 * 1024 // 2.5MB
-      }, {
-        id: "att3",
-        name: "project-proposal.docx",
-        type: "document",
-        url: "https://file-examples.com/storage/fef1706276640fa0dd1979c/2017/02/file-sample_100kB.docx",
-        size: 1.8 * 1024 * 1024 // 1.8MB
-      },{
-        id: "att2",
-        name: "project-requirements.pdf",
-        type: "document",
-        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-        size: 2.5 * 1024 * 1024 // 2.5MB
-      },{
-        id: "att2",
-        name: "project-requirements.pdf",
-        type: "document",
-        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-        size: 2.5 * 1024 * 1024 // 2.5MB
-      },]
+      attachments: [
+        {
+          id: "att2",
+          name: "project-requirements.pdf",
+          type: "document",
+          url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+          size: 2.5 * 1024 * 1024, // 2.5MB
+        },
+        {
+          id: "att3",
+          name: "project-proposal.docx",
+          type: "document",
+          url: "https://file-examples.com/storage/fef1706276640fa0dd1979c/2017/02/file-sample_100kB.docx",
+          size: 1.8 * 1024 * 1024, // 1.8MB
+        },
+        {
+          id: "att2",
+          name: "project-requirements.pdf",
+          type: "document",
+          url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+          size: 2.5 * 1024 * 1024, // 2.5MB
+        },
+        {
+          id: "att2",
+          name: "project-requirements.pdf",
+          type: "document",
+          url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+          size: 2.5 * 1024 * 1024, // 2.5MB
+        },
+      ],
     },
     {
       id: "4",
@@ -169,12 +179,14 @@ function App() {
       status: "read",
       replyTo: {
         sender: "Assistant",
-        message: "That sounds interesting! What features are you planning to add?"
+        message:
+          "That sounds interesting! What features are you planning to add?",
       },
     },
     {
       id: "8",
-      message: "Great choice! Reply functionality makes conversations more organized and easier to follow.",
+      message:
+        "Great choice! Reply functionality makes conversations more organized and easier to follow.",
       sender: "Assistant",
       direction: "incoming",
       position: "single",
@@ -186,12 +198,11 @@ function App() {
       status: "read",
       replyTo: {
         sender: "You",
-        message: "I want to add reply functionality"
+        message: "I want to add reply functionality",
       },
     },
   ]);
 
-  const [isTyping, setIsTyping] = useState(false);
   const [activeChat, setActiveChat] = useState<string>("1");
   const [replyingTo, setReplyTo] = useState<ChatMessageType | null>(null);
   const [showReactionPicker, setShowReactionPicker] = useState<string | null>(
@@ -204,12 +215,12 @@ function App() {
   );
   const [showMoreOptions, setShowMoreOptions] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [showAttachmentModal, setShowAttachmentModal] = useState<boolean>(false);
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [attachmentPreviews, setAttachmentPreviews] = useState<Attachment[]>([]);
-  const [inputMessage, setInputMessage] = useState('');
+  const [showAttachmentModal, setShowAttachmentModal] =
+    useState<boolean>(false);
+  const [, setSelectedFiles] = useState<File[]>([]);
+  const [, setAttachmentPreviews] = useState<Attachment[]>([]);
+  const [inputMessage, setInputMessage] = useState("");
   const [attachments, setAttachments] = useState<Attachment[]>([]);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const chats: Chat[] = [
     {
@@ -248,47 +259,46 @@ function App() {
   ];
 
   const handleSendMessage = () => {
-    if (inputMessage.trim() === '' && attachments.length === 0) return;
+    if (inputMessage.trim() === "" && attachments.length === 0) return;
 
     const newMessage: ChatMessageType = {
       id: Math.random().toString(36).substr(2, 9),
       message: inputMessage,
-      sender: 'You',
-      direction: 'outgoing',
-      position: 'single',
-      sentTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      sender: "You",
+      direction: "outgoing",
+      position: "single",
+      sentTime: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
       date: new Date().toLocaleDateString(),
-      status: 'sent',
+      status: "sent",
       attachments: attachments.length > 0 ? [...attachments] : undefined,
-      replyTo: replyingTo ? {
-        sender: replyingTo.sender,
-        message: replyingTo.message
-      } : undefined
+      replyTo: replyingTo
+        ? {
+            sender: replyingTo.sender,
+            message: replyingTo.message,
+          }
+        : undefined,
     };
 
-    setMessages(prev => {
+    setMessages((prev) => {
       const updatedMessages = [...prev, newMessage];
       return updatedMessages.map((msg, index) => {
-        if (index === 0) return { ...msg, position: 'first' };
-        if (index === updatedMessages.length - 1) return { ...msg, position: 'last' };
-        return { ...msg, position: 'normal' };
+        if (index === 0) return { ...msg, position: "first" };
+        if (index === updatedMessages.length - 1)
+          return { ...msg, position: "last" };
+        return { ...msg, position: "normal" };
       });
     });
 
-    setInputMessage('');
+    setInputMessage("");
     setAttachments([]);
     setSelectedFiles([]);
     setAttachmentPreviews([]);
     setShowAttachmentModal(false);
     if (replyingTo) {
       setReplyTo(null);
-    }
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
     }
   };
 
@@ -303,24 +313,28 @@ function App() {
     const newMessage: ChatMessageType = {
       id: Math.random().toString(36).substr(2, 9),
       message,
-      sender: 'You',
-      direction: 'outgoing',
-      position: 'single',
-      sentTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      sender: "You",
+      direction: "outgoing",
+      position: "single",
+      sentTime: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
       date: new Date().toLocaleDateString(),
-      status: 'sent',
+      status: "sent",
       replyTo: {
         sender: replyingTo.sender,
-        message: replyingTo.message
-      }
+        message: replyingTo.message,
+      },
     };
 
-    setMessages(prev => {
+    setMessages((prev) => {
       const updatedMessages = [...prev, newMessage];
       return updatedMessages.map((msg, index) => {
-        if (index === 0) return { ...msg, position: 'first' };
-        if (index === updatedMessages.length - 1) return { ...msg, position: 'last' };
-        return { ...msg, position: 'normal' };
+        if (index === 0) return { ...msg, position: "first" };
+        if (index === updatedMessages.length - 1)
+          return { ...msg, position: "last" };
+        return { ...msg, position: "normal" };
       });
     });
 
@@ -329,27 +343,34 @@ function App() {
   };
 
   const handleReaction = (messageId: string, reaction: string) => {
-    setMessages(prev => prev.map(msg => {
-      if (msg.id === messageId) {
-        return {
-          ...msg,
-          reactions: [...(msg.reactions || []), reaction]
-        };
-      }
-      return msg;
-    }));
+    setMessages((prev) =>
+      prev.map((msg) => {
+        if (msg.id === messageId) {
+          return {
+            ...msg,
+            reactions: [...(msg.reactions || []), reaction],
+          };
+        }
+        return msg;
+      })
+    );
   };
 
   const handleFileSelect = (files: FileList) => {
-    Array.from(files).forEach(file => {
-      const fileType = file.type.split('/')[0];
-      const fileExtension = file.name.split('.').pop()?.toLowerCase();
+    Array.from(files).forEach((file) => {
+      const fileType = file.type.split("/")[0];
+      const fileExtension = file.name.split(".").pop()?.toLowerCase();
 
-      let type: Attachment['type'] = 'document';
-      if (fileType === 'image') type = 'image';
-      else if (fileType === 'video') type = 'video';
-      else if (fileType === 'audio') type = 'audio';
-      else if (['pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt'].includes(fileExtension || '')) type = 'document';
+      let type: Attachment["type"] = "document";
+      if (fileType === "image") type = "image";
+      else if (fileType === "video") type = "video";
+      else if (fileType === "audio") type = "audio";
+      else if (
+        ["pdf", "doc", "docx", "xls", "xlsx", "txt"].includes(
+          fileExtension || ""
+        )
+      )
+        type = "document";
 
       // Create a FileReader to read the file
       const reader = new FileReader();
@@ -359,12 +380,12 @@ function App() {
           name: file.name,
           type,
           url: e.target?.result as string,
-          size: file.size
+          size: file.size,
         };
 
-        setAttachments(prev => [...prev, newAttachment]);
-        setSelectedFiles(prev => [...prev, file]);
-        setAttachmentPreviews(prev => [...prev, newAttachment]);
+        setAttachments((prev) => [...prev, newAttachment]);
+        setSelectedFiles((prev) => [...prev, file]);
+        setAttachmentPreviews((prev) => [...prev, newAttachment]);
       };
 
       // Read the file as Data URL
@@ -373,12 +394,14 @@ function App() {
   };
 
   const handleRemoveAttachment = (id: string) => {
-    const attachmentToRemove = attachments.find(att => att.id === id);
+    const attachmentToRemove = attachments.find((att) => att.id === id);
     if (attachmentToRemove) {
       URL.revokeObjectURL(attachmentToRemove.url);
     }
-    setAttachments(prev => prev.filter(attachment => attachment.id !== id));
-    setSelectedFiles(prev => prev.filter((_, index) => attachments[index]?.id !== id));
+    setAttachments((prev) => prev.filter((attachment) => attachment.id !== id));
+    setSelectedFiles((prev) =>
+      prev.filter((_, index) => attachments[index]?.id !== id)
+    );
   };
 
   useEffect(() => {
@@ -395,34 +418,9 @@ function App() {
     return chat ? chat.name : "Chat Application";
   };
 
-  const getStatusIcon = (status: "sent" | "delivered" | "read") => {
-    switch (status) {
-      case "sent":
-        return "✓";
-      case "delivered":
-        return "✓✓";
-      case "read":
-        return "✓✓";
-      default:
-        return "";
-    }
-  };
-
   const handleEditMessage = (message: ChatMessageType) => {
     setEditingMessage(message);
     setShowEditModal(true);
-  };
-
-  const handleEditSubmit = (editedText: string) => {
-    if (editingMessage) {
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.id === editingMessage.id ? { ...msg, message: editedText } : msg
-        )
-      );
-      setEditingMessage(null);
-      setShowEditModal(false);
-    }
   };
 
   const handleDeleteMessage = (messageId: string) => {
@@ -430,7 +428,7 @@ function App() {
     setShowMoreOptions(null);
   };
 
-  const handleForwardMessage = (message: ChatMessageType) => {
+  const handleForwardMessage = () => {
     // TODO: Implement forward functionality
     alert("Forward functionality will be implemented here");
     setShowMoreOptions(null);
@@ -455,20 +453,30 @@ function App() {
     };
   }, [showMoreOptions]);
 
+  const handleEditSubmit = (editedMessage: ChatMessageType) => {
+    setMessages((prev) =>
+      prev.map((msg) => (msg.id === editedMessage.id ? editedMessage : msg))
+    );
+    setShowEditModal(false);
+    setEditingMessage(null);
+  };
+
   return (
-    <div style={{ height: '100vh', position: 'relative' }}>
+    <div style={{ height: "100vh", position: "relative" }}>
       <MainContainer>
         <Sidebar position="left" scrollable={false}>
           <div style={{ padding: "16px", borderBottom: "1px solid #e0e0e0" }}>
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              padding: "8px",
-              borderRadius: "8px",
-              cursor: "pointer",
-              transition: "background-color 0.2s",
-            }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                padding: "8px",
+                borderRadius: "8px",
+                cursor: "pointer",
+                transition: "background-color 0.2s",
+              }}
+            >
               <Avatar
                 src="https://ui-avatars.com/api/?name=Your+Name&background=random"
                 name="Your Name"
@@ -524,8 +532,21 @@ function App() {
               </div>
             </ConversationHeader.Content>
             <ConversationHeader.Actions>
-              <button style={{ background: "none", border: "none", cursor: "pointer" }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <button
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
                   <circle cx="12" cy="12" r="1"></circle>
                   <circle cx="19" cy="12" r="1"></circle>
                   <circle cx="5" cy="12" r="1"></circle>
@@ -536,7 +557,8 @@ function App() {
 
           <MessageList>
             {messages.map((msg, index) => {
-              const showDateSeparator = index === 0 || messages[index - 1].date !== msg.date;
+              const showDateSeparator =
+                index === 0 || messages[index - 1].date !== msg.date;
               return (
                 <React.Fragment key={msg.id}>
                   {showDateSeparator && (
@@ -571,7 +593,7 @@ function App() {
             value={inputMessage}
             onChange={(text) => setInputMessage(text)}
             onKeyPress={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
+              if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
                 handleSendMessage();
               }
@@ -602,15 +624,15 @@ function App() {
         onSubmit={handleReplySubmit}
       />
 
-      <Modal
+      <EditModal
         show={showEditModal}
-        onHide={() => setShowEditModal(false)}
-        centered
-        backdrop="static"
-        dialogClassName="custom-modal"
-      >
-        {/* ... existing edit modal code ... */}
-      </Modal>
+        onHide={() => {
+          setShowEditModal(false);
+          setEditingMessage(null);
+        }}
+        editingMessage={editingMessage}
+        onEdit={handleEditSubmit}
+      />
     </div>
   );
 }
