@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { ChatMessage as ChatMessageType } from './types';
 import { AttachmentPreview } from './AttachmentPreview';
 import EmojiPicker, { Theme } from 'emoji-picker-react';
@@ -30,6 +30,24 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
 }) => {
   const isOutgoing = message.direction === 'outgoing';
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const emojiPickerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        emojiPickerRef.current &&
+        !emojiPickerRef.current.contains(event.target as Node) &&
+        showReactionPicker === message.id
+      ) {
+        setShowReactionPicker?.(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showReactionPicker, message.id, setShowReactionPicker]);
 
   const getStatusIcon = (status: 'sent' | 'delivered' | 'read') => {
     switch (status) {
@@ -82,6 +100,8 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
           }
         }}
       >
+
+
         <div
           className="message-actions"
           style={{
@@ -367,6 +387,36 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
             </div>
           </div>
         </div>
+        {showReactionPicker === message.id && (
+          <div
+            ref={emojiPickerRef}
+            style={{
+              position: "absolute",
+              //bottom: "220px", // renders emoji picker above the message actions
+              right: message.direction === "outgoing" ? "0" : "auto",
+              left: message.direction === "incoming" ? "0" : "auto",
+              zIndex: 1000,
+              //boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+              borderRadius: "8px",
+              overflow: "hidden",
+            }}
+          >
+            <EmojiPicker
+              onReactionClick={(emojiData) => {
+                onReaction?.(message.id, emojiData.emoji);
+                setShowReactionPicker?.(null);
+              }}
+              onEmojiClick={(emojiData) => {
+                onReaction?.(message.id, emojiData.emoji );
+                setShowReactionPicker?.(null);
+              }}
+              reactionsDefaultOpen={true}
+              allowExpandReactions={true}
+              theme={Theme.LIGHT}
+            />
+          </div>
+        )}
+
 
         <div
           style={{
@@ -482,14 +532,14 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
                       transition: 'transform 0.2s ease',
                       cursor: 'pointer'
                     }}
-                    onMouseOver={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
-                    }}
-                    onMouseOut={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-                    }}>
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+                      }}>
                       <AttachmentPreview
                         attachment={attachment}
                       />
@@ -600,31 +650,6 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
           </div>
         </div>
       </div>
-
-      {showReactionPicker === message.id && (
-        <div
-          style={{
-            position: "absolute",
-            top: "100%",
-            right: message.direction === "outgoing" ? "0" : "auto",
-            left: message.direction === "incoming" ? "0" : "auto",
-            zIndex: 1000,
-            boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-            borderRadius: "8px",
-            overflow: "hidden",
-            marginTop: "4px",
-          }}
-        >
-          <EmojiPicker
-            onEmojiClick={(emojiData) =>
-              onReaction?.(message.id, emojiData.emoji)
-            }
-            lazyLoadEmojis
-            allowExpandReactions={false}
-            theme={Theme.LIGHT}
-          />
-        </div>
-      )}
     </div>
   );
 }; 
